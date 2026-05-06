@@ -8,13 +8,33 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - run: chmod +x ipabuild.sh
+      - name: Show Xcode version
+        run: xcodebuild -version
 
-      - run: ./ipabuild.sh
+      - name: List files (debug)
+        run: ls -R
 
-      - uses: actions/upload-artifact@v4
+      - name: Make script executable
+        run: chmod +x ipabuild.sh
+
+      - name: Run build script (no signing)
+        run: |
+          export CODE_SIGNING_ALLOWED=NO
+          export CODE_SIGNING_REQUIRED=NO
+          export CODE_SIGN_IDENTITY=""
+          ./ipabuild.sh
+
+      - name: Find IPA
+        run: |
+          echo "Searching for IPA..."
+          find . -name "*.ipa"
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
         with:
           name: ipa
-          path: '**/*.ipa'
+          path: |
+            **/*.ipa
