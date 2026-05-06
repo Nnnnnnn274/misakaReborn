@@ -20,7 +20,7 @@ jobs:
       - name: Build Archive (no signing)
         run: |
           xcodebuild \
-            -scheme YourSchemeName \
+            -scheme misaka \
             -configuration Release \
             -archivePath build/App.xcarchive \
             archive \
